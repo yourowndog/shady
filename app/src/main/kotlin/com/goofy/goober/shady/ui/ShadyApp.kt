@@ -31,6 +31,7 @@ import com.goofy.goober.style.LargeCard
 import com.goofy.goober.style.ShadyTheme
 import com.goofy.goober.style.Space
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.goofy.goober.shady.feature.web.DesktopWebViewScreen
 
 @Composable
 fun ShadyApp(modifier: Modifier = Modifier) {
@@ -52,6 +53,31 @@ fun Scaffold(
         .currentBackStackEntryFlow
         .collectAsState(initial = navController.currentBackStackEntry)
 
+    val webScreens = listOf(
+        DestinationScreen(
+            title = "codex",
+            content = {
+                DesktopWebViewScreen(
+                    url = "https://chatgpt.com/codex",
+                    title = "Codex",
+                    onNavigateUp = { navController.navigateUp() }
+                )
+            }
+        ),
+        DestinationScreen(
+            title = "daemon",
+            content = {
+                DesktopWebViewScreen(
+                    url = "https://chatgpt.com/daemon",
+                    title = "Daemon",
+                    onNavigateUp = { navController.navigateUp() }
+                )
+            }
+        ),
+    )
+
+    val allScreens = screens + webScreens
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -69,7 +95,7 @@ fun Scaffold(
     ) { padding ->
         Content(
             home = home,
-            screens = screens,
+            screens = allScreens,
             modifier = Modifier.padding(padding),
             navController = navController
         )
@@ -97,14 +123,19 @@ fun Content(
             )
         }
         screens.forEach { screen ->
-            navigation(
-                route = "${screen.title} Home",
-                startDestination = screen.title
-            ) {
-                if (screen is NestedNavScreen) {
-                    screen.nestedGraph(this) {
-                        navController.navigate(it.title)
+            when (screen) {
+                is NestedNavScreen -> {
+                    navigation(
+                        route = "${screen.title} Home",
+                        startDestination = screen.title
+                    ) {
+                        screen.nestedGraph(this) {
+                            navController.navigate(it.title)
+                        }
                     }
+                }
+                is DestinationScreen -> {
+                    composable(screen.title) { screen.content() }
                 }
             }
         }
