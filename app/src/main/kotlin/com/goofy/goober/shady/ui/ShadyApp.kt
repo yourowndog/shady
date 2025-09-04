@@ -6,8 +6,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.goofy.goober.shady.nav.Routes
 import com.goofy.goober.shady.feature.home.HomeScreen
-import com.goofy.goober.shady.feature.settings.SettingsScreen
+import com.goofy.goober.shady.feature.settings.EffectEditorScreen
+import com.goofy.goober.shady.feature.settings.EffectListScreen
 import com.goofy.goober.shady.feature.web.DesktopWebViewScreen
+import com.goofy.goober.shady.portal.PortalState
 import com.goofy.goober.shady.animated.animatedShadersGraph
 import com.goofy.goober.shady.static.textureShadersGraph
 import com.goofy.goober.style.ShadyTheme
@@ -32,7 +34,23 @@ fun ShadyApp() {
                     onNavigateUp = { navController.popBackStack() }
                 )
             }
-            composable(Routes.Settings) { SettingsScreen(navController) }
+            composable(Routes.Settings) {
+                EffectListScreen(
+                    onOpen = { id -> navController.navigate("effect_editor/$id") },
+                    onBack = { navController.navigateUp() }
+                )
+            }
+            composable("effect_editor/{id}") { backStack ->
+                val id = backStack.arguments?.getString("id")!!
+                EffectEditorScreen(
+                    effectId = id,
+                    onUse = {
+                        PortalState.effectId = id
+                        navController.navigateUp()
+                    },
+                    onBack = { navController.navigateUp() }
+                )
+            }
             textureShadersGraph { navController.navigate(it.title) }
             animatedShadersGraph { navController.navigate(it.title) }
         }

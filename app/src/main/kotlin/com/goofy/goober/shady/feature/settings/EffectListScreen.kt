@@ -13,18 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.goofy.goober.shady.animated.AnimatedShadersRoute
-import com.goofy.goober.shady.static.TextureShadersRoute
 
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun EffectListScreen(
+    onOpen: (String) -> Unit,
+    onBack: () -> Unit
+) {
+    val effects = listOf("WARP_TUNNEL", "NOODLE_ZOOM", "GRADIENT_FIELD")
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text("Effects") },
                 navigationIcon = {
-                    TextButton(onClick = { navController.navigateUp() }) { Text("Back") }
+                    TextButton(onClick = onBack) { Text("Back") }
                 }
             )
         }
@@ -35,18 +36,14 @@ fun SettingsScreen(navController: NavController) {
                 .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = { navController.navigate(TextureShadersRoute) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) { Text("Texture Shaders") }
-            Button(
-                onClick = { navController.navigate(AnimatedShadersRoute) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) { Text("Animated Shaders") }
+            effects.forEach { effect ->
+                Button(
+                    onClick = { onOpen(effect) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) { Text(effect) }
+            }
         }
     }
 }
