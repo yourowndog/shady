@@ -2,7 +2,6 @@ package com.goofy.goober.shady.animated
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -11,15 +10,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.navigation.NavGraphBuilder
 import com.goofy.goober.shaders.GradientShader
-import com.goofy.goober.shaders.LightScatteringShader
 import com.goofy.goober.shaders.NoodleZoomShader
 import com.goofy.goober.shaders.WarpSpeedShader
 import com.goofy.goober.shady.ui.DestinationScreen
-import com.goofy.goober.shady.ui.HomeScreens
 import com.goofy.goober.shady.ui.Screen
 import com.goofy.goober.shady.ui.nestedContent
 import com.goofy.goober.sketch.SketchWithCache
 import com.goofy.goober.style.LargeCardShape
+
+const val AnimatedShadersRoute = "Animated Shaders"
 
 private val Screens = listOf(
     DestinationScreen(title = "Gradient Shader") {
@@ -34,7 +33,7 @@ private val Screens = listOf(
 )
 
 fun NavGraphBuilder.animatedShadersGraph(onNavigate: (Screen) -> Unit) {
-    nestedContent(onNavigate, screens = Screens, home = HomeScreens.AnimatedShaders)
+    nestedContent(onNavigate, screens = Screens, home = AnimatedShadersRoute)
 }
 
 @Composable
