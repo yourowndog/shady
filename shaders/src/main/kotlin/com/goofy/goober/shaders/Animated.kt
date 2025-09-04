@@ -1,6 +1,6 @@
 package com.goofy.goober.shaders
 
-import android.graphics.RuntimeShader
+import androidx.compose.ui.graphics.RuntimeShader
 
 /**
  * Shadertoy's default shader

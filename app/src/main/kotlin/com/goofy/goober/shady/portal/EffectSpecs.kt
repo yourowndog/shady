@@ -1,14 +1,13 @@
 package com.goofy.goober.shady.portal
 
-import android.graphics.RuntimeShader
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.RuntimeShader
 
 data class Param(val key: String, val label: String, val min: Float, val max: Float, val default: Float)
 
 data class EffectSpec(
-    val id: String,
+    val runtimeId: String,
     val params: List<Param>,
-    val apply: (shader: RuntimeShader, params: Map<String, Float>, sizePx: Size, timeSec: Float) -> Unit
+    val apply: (RuntimeShader, Map<String, Float>) -> Unit
 ) {
     fun defaults(): MutableMap<String, Float> =
         params.associate { it.key to it.default }.toMutableMap()
@@ -16,36 +15,27 @@ data class EffectSpec(
 
 object Effects {
     val WARP_TUNNEL = EffectSpec(
-        id = "WARP_TUNNEL",
+        runtimeId = "WARP_TUNNEL",
         params = listOf(
             Param("speed", "Speed", 0f, 2f, 1.0f)
         ),
-        apply = { shader, params, size, timeSec ->
-            shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("time", timeSec * (params["speed"] ?: 1f))
-        }
+        apply = { _, _ -> }
     )
 
     val NOODLE_ZOOM = EffectSpec(
-        id = "NOODLE_ZOOM",
+        runtimeId = "NOODLE_ZOOM",
         params = listOf(
             Param("speed", "Speed", 0f, 2f, 1.0f)
         ),
-        apply = { shader, params, size, timeSec ->
-            shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("time", timeSec * (params["speed"] ?: 1f))
-        }
+        apply = { _, _ -> }
     )
 
     val GRADIENT_FIELD = EffectSpec(
-        id = "GRADIENT_FIELD",
+        runtimeId = "GRADIENT_FIELD",
         params = listOf(
             Param("speed", "Speed", 0f, 2f, 1.0f)
         ),
-        apply = { shader, params, size, timeSec ->
-            shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("time", timeSec * (params["speed"] ?: 1f))
-        }
+        apply = { _, _ -> }
     )
 
     fun specFor(id: String) = when (id) {
@@ -55,4 +45,3 @@ object Effects {
         else -> GRADIENT_FIELD
     }
 }
-

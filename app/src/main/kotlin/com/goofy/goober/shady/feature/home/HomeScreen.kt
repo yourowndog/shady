@@ -19,7 +19,6 @@ import com.goofy.goober.shady.nav.Routes
 import com.goofy.goober.shady.portal.PortalCanvas
 import com.goofy.goober.shady.portal.PortalState
 import com.goofy.goober.shady.portal.Effects
-import com.goofy.goober.shady.portal.shaderFor
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -35,8 +34,8 @@ fun HomeScreen(navController: NavController) {
             val spec = Effects.specFor(effectId)
             val params = PortalState.paramsByEffect[effectId] ?: spec.defaults()
             PortalCanvas(
-                shader = shaderFor(effectId),
-                onFrame = { s, size, t -> spec.apply(s, params, size, t) }
+                spec = spec,
+                params = params
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
