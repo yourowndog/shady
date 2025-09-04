@@ -3,7 +3,7 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
 }
@@ -30,11 +30,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     android.sourceSets.all {
         java.srcDir("src/$name/kotlin")
@@ -42,13 +42,27 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
 }
 
 dependencies {
     implementation(libs.bundles.androidx)
-    implementation(libs.bundles.compose)
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.google)
 
-    debugImplementation(libs.compose.ui.tooling)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.ui.util)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }
