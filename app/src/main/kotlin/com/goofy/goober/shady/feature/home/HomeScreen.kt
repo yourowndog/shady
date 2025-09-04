@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,6 +19,7 @@ import androidx.navigation.NavController
 import com.goofy.goober.shady.nav.Routes
 import com.goofy.goober.shady.portal.PortalCanvas
 import com.goofy.goober.shady.portal.PortalState
+import com.goofy.goober.shady.portal.Effects
 import com.goofy.goober.shady.portal.shaderFor
 
 @Composable
@@ -30,7 +32,13 @@ fun HomeScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PortalCanvas(shader = shaderFor(PortalState.effectId))
+            val spec = remember(PortalState.effectId) { Effects.specFor(PortalState.effectId) }
+            val params = PortalState.paramsByEffect[PortalState.effectId]
+                ?: spec.params.associate { it.key to it.default }.toMutableMap()
+            PortalCanvas(
+                shader = shaderFor(PortalState.effectId),
+                onFrame = { shader, size, time -> spec.apply(shader, params, size, time) }
+            )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = { navController.navigate(Routes.Codex) },
