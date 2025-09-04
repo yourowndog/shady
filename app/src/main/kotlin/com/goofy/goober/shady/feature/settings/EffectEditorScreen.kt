@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import com.goofy.goober.shady.portal.Effects
 import com.goofy.goober.shady.portal.PortalCanvas
 import com.goofy.goober.shady.portal.PortalState
-import com.goofy.goober.shady.portal.shaderFor
 
 @Composable
 fun EffectEditorScreen(
@@ -30,7 +29,6 @@ fun EffectEditorScreen(
             putAll(PortalState.paramsByEffect[effectId] ?: spec.defaults())
         }
     }
-    val shader = remember(effectId) { shaderFor(effectId) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,8 +53,8 @@ fun EffectEditorScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PortalCanvas(
-                shader = shader,
-                onFrame = { s, size, t -> spec.apply(s, params, size, t) }
+                spec = spec,
+                params = params
             )
             spec.params.forEach { param ->
                 val value = params[param.key] ?: param.default
