@@ -42,13 +42,15 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
 }
 
 dependencies {
-    implementation(libs.bundles.androidx)
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.kotlin)
-    implementation(libs.bundles.google)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
 
-    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }
