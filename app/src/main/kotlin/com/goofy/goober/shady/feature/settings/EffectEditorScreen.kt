@@ -24,11 +24,10 @@ fun EffectEditorScreen(
     onUse: () -> Unit,
     onBack: () -> Unit,
 ) {
-    val spec = remember(effectId) { Effects.specFor(effectId) }
-    val local = remember(spec) {
+    val spec = Effects.specFor(effectId)
+    val params = remember(spec) {
         mutableStateMapOf<String, Float>().apply {
-            spec.params.forEach { put(it.key, it.default) }
-            PortalState.paramsByEffect[effectId]?.let { putAll(it) }
+            putAll(PortalState.paramsByEffect[effectId] ?: spec.defaults())
         }
     }
     val shader = remember(effectId) { shaderFor(effectId) }
@@ -42,7 +41,7 @@ fun EffectEditorScreen(
                 actions = {
                     TextButton(onClick = {
                         PortalState.effectId = effectId
-                        PortalState.paramsByEffect[effectId] = local.toMutableMap()
+                        PortalState.paramsByEffect[effectId] = params.toMutableMap()
                         onUse()
                     }) { Text("Use") }
                 }
@@ -57,14 +56,14 @@ fun EffectEditorScreen(
         ) {
             PortalCanvas(
                 shader = shader,
-                onFrame = { s, size, time -> spec.apply(s, local, size, time) }
+                onFrame = { s, size, t -> spec.apply(s, params, size, t) }
             )
             spec.params.forEach { param ->
-                val value = local[param.key] ?: param.default
+                val value = params[param.key] ?: param.default
                 Text("${param.label}: ${String.format("%.2f", value)}")
                 Slider(
                     value = value,
-                    onValueChange = { local[param.key] = it },
+                    onValueChange = { params[param.key] = it },
                     valueRange = param.min..param.max
                 )
             }

@@ -9,7 +9,10 @@ data class EffectSpec(
     val id: String,
     val params: List<Param>,
     val apply: (shader: RuntimeShader, params: Map<String, Float>, sizePx: Size, timeSec: Float) -> Unit
-)
+) {
+    fun defaults(): MutableMap<String, Float> =
+        params.associate { it.key to it.default }.toMutableMap()
+}
 
 object Effects {
     val WARP_TUNNEL = EffectSpec(
@@ -17,9 +20,9 @@ object Effects {
         params = listOf(
             Param("speed", "Speed", 0f, 2f, 1.0f)
         ),
-        apply = { shader, p, size, t ->
+        apply = { shader, params, size, timeSec ->
             shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("time", t * (p["speed"] ?: 1f))
+            shader.setFloatUniform("time", timeSec * (params["speed"] ?: 1f))
         }
     )
 
@@ -28,9 +31,9 @@ object Effects {
         params = listOf(
             Param("speed", "Speed", 0f, 2f, 1.0f)
         ),
-        apply = { shader, p, size, t ->
+        apply = { shader, params, size, timeSec ->
             shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("time", t * (p["speed"] ?: 1f))
+            shader.setFloatUniform("time", timeSec * (params["speed"] ?: 1f))
         }
     )
 
@@ -39,9 +42,9 @@ object Effects {
         params = listOf(
             Param("speed", "Speed", 0f, 2f, 1.0f)
         ),
-        apply = { shader, p, size, t ->
+        apply = { shader, params, size, timeSec ->
             shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("time", t * (p["speed"] ?: 1f))
+            shader.setFloatUniform("time", timeSec * (params["speed"] ?: 1f))
         }
     )
 

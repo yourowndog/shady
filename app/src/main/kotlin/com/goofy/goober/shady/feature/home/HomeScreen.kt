@@ -11,7 +11,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,12 +31,12 @@ fun HomeScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val spec = remember(PortalState.effectId) { Effects.specFor(PortalState.effectId) }
-            val params = PortalState.paramsByEffect[PortalState.effectId]
-                ?: spec.params.associate { it.key to it.default }.toMutableMap()
+            val effectId = PortalState.effectId
+            val spec = Effects.specFor(effectId)
+            val params = PortalState.paramsByEffect[effectId] ?: spec.defaults()
             PortalCanvas(
-                shader = shaderFor(PortalState.effectId),
-                onFrame = { shader, size, time -> spec.apply(shader, params, size, time) }
+                shader = shaderFor(effectId),
+                onFrame = { s, size, t -> spec.apply(s, params, size, t) }
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
