@@ -8,15 +8,18 @@ import android.graphics.RuntimeShader
 val GradientShader = RuntimeShader(
     """
         uniform float2 resolution;
-        uniform float time;
-        
+        uniform float  time;
+        uniform float  uSpeed;   // 0..1
+        float speedScale = mix(0.1, 2.0, clamp(uSpeed, 0.0, 1.0));
+        float t2 = time * speedScale;   // scaled time
+
         vec4 main(vec2 fragCoord) {
             // Normalized pixel coordinates (from 0 to 1)
             vec2 uv = fragCoord/resolution.xy;
-    
+
             // Time varying pixel color
-            vec3 col = 0.8 + 0.2 * cos(time*2.0+uv.xxx*2.0+vec3(1,2,4));
-    
+            vec3 col = 0.8 + 0.2 * cos(t2*2.0+uv.xxx*2.0+vec3(1,2,4));
+
             // Output to screen
             return vec4(col,1.0);
         }
@@ -29,17 +32,20 @@ val GradientShader = RuntimeShader(
 val NoodleZoomShader = RuntimeShader(
     """
         uniform float2 resolution;
-        uniform float time;
+        uniform float  time;
+        uniform float  uSpeed;   // 0..1
+        float speedScale = mix(0.1, 2.0, clamp(uSpeed, 0.0, 1.0));
+        float t2 = time * speedScale;   // scaled time
 
         // Source: @notargs https://twitter.com/notargs/status/1250468645030858753
         float f(vec3 p) {
-            p.z -= time * 10.;
+            p.z -= t2 * 10.;
             float a = p.z * .1;
             p.xy *= mat2(cos(a), sin(a), -sin(a), cos(a));
             return .1 - length(cos(p.xy) + sin(p.yz));
         }
-        
-        half4 main(vec2 fragcoord) { 
+
+        half4 main(vec2 fragcoord) {
             vec3 d = .5 - fragcoord.xy1 / resolution.y;
             vec3 p=vec3(0);
             for (int i = 0; i < 32; i++) {
