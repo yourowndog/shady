@@ -10,9 +10,9 @@ val GradientShader = RuntimeShader(
         uniform float2 resolution;
         uniform float  time;
         uniform float  uSpeed;   // 0..1
-        uniform float3 uBase = float3(0.8, 0.8, 0.8);
-        uniform float3 uAmp  = float3(0.2, 0.2, 0.2);
-        uniform float3 uPhase = float3(1.0, 2.0, 4.0);
+        uniform float3 uBase;
+        uniform float3 uAmp;
+        uniform float3 uPhase;
         float speedScale = mix(0.1, 2.0, clamp(uSpeed, 0.0, 1.0));
         float t2 = time * speedScale;   // scaled time
 
