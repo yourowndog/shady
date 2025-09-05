@@ -18,6 +18,7 @@ import com.goofy.goober.sketch.SketchWithCache
 @Composable
 fun PortalCanvas(
     shader: RuntimeShader,
+    params: EffectParams,
     ringThicknessDp: Float = 6f,
     modifier: Modifier = Modifier.size(260.dp)
 ) {
@@ -25,6 +26,7 @@ fun PortalCanvas(
     SketchWithCache(modifier = modifier) { time ->
         shader.setFloatUniform("resolution", size.width, size.height)
         shader.setFloatUniform("time", time)
+        shader.setFloatUniform("uSpeed", params.speed)
         val ringThicknessPx = ringThicknessDp.dp.toPx()
         val ringRadius = size.minDimension / 2f - ringThicknessPx / 2f
         val clipRadius = ringRadius - ringThicknessPx / 2f

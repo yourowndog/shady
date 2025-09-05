@@ -33,6 +33,7 @@ import com.goofy.goober.shady.portal.shaderFor
 
 @Composable
 fun HomeScreen(navController: NavController) {
+    val params = PortalState.params
     Scaffold { padding ->
         Column(
             modifier = Modifier
@@ -50,7 +51,7 @@ fun HomeScreen(navController: NavController) {
                 letterSpacing = 2.sp,
             )
             Spacer(modifier = Modifier.height(32.dp))
-            PortalCanvas(shader = shaderFor(PortalState.effectId))
+            PortalCanvas(shader = shaderFor(PortalState.effectId), params = params)
             Spacer(modifier = Modifier.height(20.dp))
             Row {
                 NavText(label = "codex") {

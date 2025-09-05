@@ -63,15 +63,18 @@ val WarpSpeedShader = RuntimeShader(
         //----------------------------------------------------------------------------------------
         uniform float2 resolution;      // Viewport resolution (pixels)
         uniform float  time;            // Shader playback time (s)
+        uniform float uSpeed;  // 0..1
 
         vec4 main( in float2 fragCoord )
         {
             float s = 0.0, v = 0.0;
             vec2 uv = (fragCoord / resolution.xy) * 2.0 - 1.;
-            float time = (time-2.0)*58.0;
+            float t = (time-2.0)*58.0;
+            float speedScale = mix(0.1, 2.0, clamp(uSpeed, 0.0, 1.0));
+            t *= speedScale;
             vec3 col = vec3(0);
-            vec3 init = vec3(sin(time * .0032)*.3, .35 - cos(time * .005)*.3, time * 0.002);
-            for (int r = 0; r < 100; r++) 
+            vec3 init = vec3(sin(t * .0032)*.3, .35 - cos(t * .005)*.3, t * 0.002);
+            for (int r = 0; r < 100; r++)
             {
                 vec3 p = init + s * vec3(uv, 0.05);
                 p.z = fract(p.z);
