@@ -13,13 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.goofy.goober.shady.portal.EffectId
 
 @Composable
 fun EffectListScreen(
-    onOpen: (String) -> Unit,
+    onOpen: (EffectId) -> Unit,
     onBack: () -> Unit
 ) {
-    val effects = listOf("WARP_TUNNEL", "NOODLE_ZOOM", "GRADIENT_FIELD")
+    val effects = listOf(EffectId.WARP_TUNNEL, EffectId.NOODLE_ZOOM, EffectId.GRADIENT)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -42,7 +43,7 @@ fun EffectListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) { Text(effect) }
+                ) { Text(effect.name) }
             }
         }
     }

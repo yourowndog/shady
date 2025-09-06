@@ -18,23 +18,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.goofy.goober.shady.portal.EffectId
 import com.goofy.goober.shady.portal.PortalCanvas
 import com.goofy.goober.shady.portal.PortalState
 import com.goofy.goober.shady.portal.shaderFor
+import com.goofy.goober.sketch.produceDrawLoopCounter
 
 @Composable
 fun EffectEditorScreen(
-    effectId: String,
+    effectId: EffectId,
     onUse: () -> Unit,
     onBack: () -> Unit
 ) {
     val shader = shaderFor(effectId)
     val params = PortalState.params
     var tempSpeed by remember { mutableStateOf(params.speed) }
+    val time by produceDrawLoopCounter()
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(effectId) },
+                title = { Text(effectId.name) },
                 navigationIcon = {
                     TextButton(onClick = onBack) { Text("Back") }
                 },
@@ -50,7 +53,7 @@ fun EffectEditorScreen(
                 .padding(padding),
             contentAlignment = Alignment.Center
         ) {
-            PortalCanvas(shader = shader, params = params)
+            PortalCanvas(shader = shader, effectId = effectId, params = params, timeSeconds = time)
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)

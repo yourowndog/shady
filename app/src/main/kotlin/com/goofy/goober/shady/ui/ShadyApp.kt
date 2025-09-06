@@ -9,6 +9,7 @@ import com.goofy.goober.shady.feature.home.HomeScreen
 import com.goofy.goober.shady.feature.settings.EffectEditorScreen
 import com.goofy.goober.shady.feature.settings.EffectListScreen
 import com.goofy.goober.shady.feature.web.DesktopWebViewScreen
+import com.goofy.goober.shady.portal.EffectId
 import com.goofy.goober.shady.portal.PortalState
 import com.goofy.goober.shady.animated.animatedShadersGraph
 import com.goofy.goober.shady.static.textureShadersGraph
@@ -36,16 +37,17 @@ fun ShadyApp() {
             }
             composable(Routes.Settings) {
                 EffectListScreen(
-                    onOpen = { id -> navController.navigate("effect_editor/$id") },
+                    onOpen = { id -> navController.navigate("effect_editor/${id.name}") },
                     onBack = { navController.navigateUp() }
                 )
             }
             composable("effect_editor/{id}") { backStack ->
                 val id = backStack.arguments?.getString("id")!!
+                val effect = EffectId.valueOf(id)
                 EffectEditorScreen(
-                    effectId = id,
+                    effectId = effect,
                     onUse = {
-                        PortalState.effectId = id
+                        PortalState.effectId = effect
                         navController.navigateUp()
                     },
                     onBack = { navController.navigateUp() }

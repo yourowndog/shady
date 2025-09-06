@@ -7,23 +7,24 @@ import android.graphics.RuntimeShader
  */
 val GradientShader = RuntimeShader(
     """
-        uniform float2 resolution;
-        uniform float  time;
-        uniform float  uSpeed;   // 0..1
-        float speedScale = mix(0.1, 2.0, clamp(uSpeed, 0.0, 1.0));
-        float t2 = time * speedScale;   // scaled time
+uniform float2 resolution;
+uniform float  time;
+uniform float  uSpeed;
 
-        vec4 main(vec2 fragCoord) {
-            // Normalized pixel coordinates (from 0 to 1)
-            vec2 uv = fragCoord/resolution.xy;
+// palette uniforms (no initializers in AGSL)
+uniform float3 uBase;    // e.g., (0.8, 0.8, 0.8) from Kotlin
+uniform float3 uAmp;     // e.g., (0.2, 0.2, 0.2) from Kotlin
+uniform float3 uPhase;   // e.g., (1.0, 2.0, 4.0) from Kotlin
 
-            // Time varying pixel color
-            vec3 col = 0.8 + 0.2 * cos(t2*2.0+uv.xxx*2.0+vec3(1,2,4));
+half4 main(float2 fragCoord) {
+    float speedScale = mix(0.1, 2.0, clamp(uSpeed, 0.0, 1.0));
+    float t2 = time * speedScale;
+    float2 uv = fragCoord / resolution.xy;
 
-            // Output to screen
-            return vec4(col,1.0);
-        }
-    """
+    float3 col = uBase + uAmp * cos(t2 * 2.0 + uv.xxx * 2.0 + uPhase);
+    return half4(col, 1.0);
+}
+"""
 )
 
 /**

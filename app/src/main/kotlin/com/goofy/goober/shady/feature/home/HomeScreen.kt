@@ -30,10 +30,12 @@ import com.goofy.goober.shady.nav.Routes
 import com.goofy.goober.shady.portal.PortalCanvas
 import com.goofy.goober.shady.portal.PortalState
 import com.goofy.goober.shady.portal.shaderFor
+import com.goofy.goober.sketch.produceDrawLoopCounter
 
 @Composable
 fun HomeScreen(navController: NavController) {
     val params = PortalState.params
+    val time by produceDrawLoopCounter()
     Scaffold { padding ->
         Column(
             modifier = Modifier
@@ -51,7 +53,12 @@ fun HomeScreen(navController: NavController) {
                 letterSpacing = 2.sp,
             )
             Spacer(modifier = Modifier.height(32.dp))
-            PortalCanvas(shader = shaderFor(PortalState.effectId), params = params)
+            PortalCanvas(
+                shader = shaderFor(PortalState.effectId),
+                effectId = PortalState.effectId,
+                params = params,
+                timeSeconds = time
+            )
             Spacer(modifier = Modifier.height(20.dp))
             Row {
                 NavText(label = "codex") {
