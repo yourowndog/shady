@@ -10,6 +10,9 @@ val GradientShader = RuntimeShader(
         uniform float2 resolution;
         uniform float  time;
         uniform float  uSpeed;   // 0..1
+        uniform float3 uBase;
+        uniform float3 uAmp;
+        uniform float3 uPhase;
         float speedScale = mix(0.1, 2.0, clamp(uSpeed, 0.0, 1.0));
         float t2 = time * speedScale;   // scaled time
 
@@ -18,7 +21,7 @@ val GradientShader = RuntimeShader(
             vec2 uv = fragCoord/resolution.xy;
 
             // Time varying pixel color
-            vec3 col = 0.8 + 0.2 * cos(t2*2.0+uv.xxx*2.0+vec3(1,2,4));
+            vec3 col = uBase + uAmp * cos(t2*2.0+uv.xxx*2.0+uPhase);
 
             // Output to screen
             return vec4(col,1.0);
