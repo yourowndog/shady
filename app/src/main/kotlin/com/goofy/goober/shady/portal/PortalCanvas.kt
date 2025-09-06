@@ -14,6 +14,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.dp
 import com.goofy.goober.sketch.SketchWithCache
+import com.goofy.goober.shaders.GradientShader
 import kotlin.math.pow
 
 private fun Color.toLinear(): Triple<Float, Float, Float> {
@@ -39,12 +40,14 @@ fun PortalCanvas(
         shader.setFloatUniform("resolution", size.width, size.height)
         shader.setFloatUniform("time", time)
         shader.setFloatUniform("uSpeed", params.speed)
-        val (br, bg, bb) = (params.base ?: Color(0xFFCCCCCC)).toLinear()
-        shader.setFloatUniform("uBase", br, bg, bb)
-        val (ar, ag, ab) = (params.amp ?: Color(0xFF333333)).toLinear()
-        shader.setFloatUniform("uAmp", ar, ag, ab)
-        val phase = params.phase ?: Triple(1f, 2f, 4f)
-        shader.setFloatUniform("uPhase", phase.first, phase.second, phase.third)
+        if (shader === GradientShader) {
+            val (br, bg, bb) = (params.base ?: Color(0xFFCCCCCC)).toLinear()
+            shader.setFloatUniform("uBase", br, bg, bb)
+            val (ar, ag, ab) = (params.amp ?: Color(0xFF333333)).toLinear()
+            shader.setFloatUniform("uAmp", ar, ag, ab)
+            val phase = params.phase ?: Triple(1f, 2f, 4f)
+            shader.setFloatUniform("uPhase", phase.first, phase.second, phase.third)
+        }
         val ringThicknessPx = ringThicknessDp.dp.toPx()
         val ringRadius = size.minDimension / 2f - ringThicknessPx / 2f
         val clipRadius = ringRadius - ringThicknessPx / 2f
